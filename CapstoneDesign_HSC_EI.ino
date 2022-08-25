@@ -15,6 +15,8 @@
 
 #define testTime 4000
 
+#define alcoholLimit 0.8
+
 #define count 32
 static double list[count] = {};
 static int last = 0;
@@ -38,7 +40,7 @@ void setup()
   pinMode(soundPin, OUTPUT);
 
   digitalWrite(lockRelayPin, LOW);
-  digitalWrite(redLampRelayPin, HIGH);
+  digitalWrite(redLampRelayPin, LOW);
   digitalWrite(greenLampRelayPin, LOW);
 
   init_List();
@@ -65,7 +67,7 @@ void loop()
     {
       pass = false;
       digitalWrite(lockRelayPin, LOW);
-      digitalWrite(redLampRelayPin, HIGH);
+      digitalWrite(redLampRelayPin, LOW);
       digitalWrite(greenLampRelayPin, LOW);
       lcd.setCursor(0, 1);
       lcd.print("Test Reset");
@@ -140,7 +142,7 @@ void loop()
       lcd.clear();
       lcd.setCursor(0, 0);
       //====================================================================================================//
-      if (result < 0.4) // 테스트 통과함
+      if (result < alcoholLimit) // 테스트 통과함
       {
         pass = true;
         digitalWrite(lockRelayPin, HIGH);
@@ -152,6 +154,8 @@ void loop()
       //====================================================================================================//
       else // 테스트에 통과하지 못함
       {
+        digitalWrite(redLampRelayPin, HIGH);
+        digitalWrite(greenLampRelayPin, LOW);
         tone(soundPin, 800, 2000);
         lcd.print("Test Failure");
       }
